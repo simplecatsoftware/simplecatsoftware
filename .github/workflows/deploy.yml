@@ -1,0 +1,28 @@
+name: Build and Deploy
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v2.3.1
+        with:
+          fetch-depth: 0
+
+      - name: Build 🔧
+        run: |
+          git worktree add -B gh-pages public origin/gh-pages
+          cp website/* public/
+
+      - name: Deploy 🚀
+        run: |
+          cd public
+          git add .
+          git config --global user.name "simplecat.software deployer"
+          git config --global user.email "deployer@simplecat.software"
+          git commit -m "Publishing changes"
+          git push
